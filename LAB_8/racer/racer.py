@@ -24,24 +24,29 @@ class Car(pg.sprite.Sprite):
         super().__init__()
         self.screen = screen
         self.image = pg.image.load(image)
+        # get rect
         self.rect = self.image.get_rect(center=(self.screen.get_size()[0]/2, self.screen.get_size()[1]/2))
         
     def draw(self):
+        # draw Car 
         self.screen.blit(self.image, self.rect)
 
 class Enemy(Car):
+
     def __init__(self, screen, image):
         super().__init__(screen, image)
+        # create rect on the top scene
         self.rect.bottom = 0
         self.image = pg.transform.rotate(self.image, 180)
     
-    def forward(self, func):
+    def forward(self):
         self.rect.move_ip(0, self.speed)
-        if(self.rect.top > self.screen.get_size()[1]):
-            self.spawn()
-            func()
+
+    def get__top(self):
+        return self.rect.top
     
     def spawn(self):
+        # just change place of object
         self.rect.bottom = 0
         self.rect.center = (random.randint(50,350), 0) 
 
@@ -49,21 +54,20 @@ class Player(Car):
     def __init__(self, screen, image):
         super().__init__(screen, image)
         self.speed = 5
-
+    # move right player
     def right(self):
         self.rect.move_ip(self.speed, 0)
-
+    # move right player
     def left(self):
         self.rect.move_ip(-self.speed, 0)
-
-
-
 
 player = Player(screen,  "car.png")
 enemy = Enemy(screen, "enemy.png")
 
+# add enemy in group
 enemies = pg.sprite.Group()
 enemies.add(enemy)
+# add all object in common group
 all_sprites = pg.sprite.Group()
 all_sprites.add(player)
 all_sprites.add(enemy)
@@ -76,25 +80,31 @@ def addCoin():
 
 
 while running:
+    # draw background
     screen.fill((255, 255, 255))
     player.draw()
     enemy.draw()
+    # draw score
     scores = font_small.render(str(coin), True,(0,0,0))
     screen.blit(scores, (10, 10))
 
     pressed = pg.key.get_pressed()
-
+    # track pressing button
     if pressed[pg.K_RIGHT]:
         player.right()
     if pressed[pg.K_LEFT]:
         player.left()
     
-    enemy.forward(addCoin)
-
+    enemy.forward()
+    if(enemy.get__top() > screen.get_size()[1]):
+        enemy.spawn()
+        coin += 1
+            
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
 
+    # if enemy touch with player then game over
     if pg.sprite.spritecollideany(player, enemies):
         screen.fill((255,0,0))
         screen.blit(game_over, game_over_rect)
@@ -105,6 +115,7 @@ while running:
         pg.quit()
         sys.exit()
 
+    
     pg.display.update()
     clock.tick(FPS)
 
