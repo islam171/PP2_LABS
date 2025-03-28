@@ -1,21 +1,21 @@
 import pygame as pg
-from pygame.math import Vector2
 
 
 class Button:
-    def __init__(self,screen, color, pos: Vector2):
+    def __init__(self, x, y, width, height, text, color, action, screen):
+        self.rect = pg.Rect(x, y, width, height)
         self.color = color
+        self.action = action
+        self.text = text
         self.screen = screen
-        self.surface = pg.surface.Surface((20,20))
-        self.surface.fill(self.color)
-        self.rect = self.surface.get_rect(center=(pos))
 
     def draw(self):
-        self.screen.blit(self.surface, self.rect)
-
-    def checkClick(self, pos):
-        return self.rect.collidepoint(pos)
+        pg.draw.rect(self.screen, self.color, self.rect)
+        font = pg.font.Font(None, 16)
+        text_surface = font.render(self.text, True, (255, 255, 255))
+        self.screen.blit(text_surface, (self.rect.x+self.rect.h/4, self.rect.y+self.rect.h/4))
     
-    def getColor(self):
-        return self.color
-   
+    def check_action(self, event):
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.action()
