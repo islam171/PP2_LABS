@@ -2,6 +2,7 @@ import pygame as pg
 import sys
 import random
 import time
+import os
 
 
 pg.init()
@@ -22,10 +23,12 @@ class Car(pg.sprite.Sprite):
 
     def __init__(self, screen, image):
         super().__init__()
+        self.size = (40, 50)
         self.screen = screen
         self.image = pg.image.load(image)
+        self.image = pg.transform.scale(self.image, self.size)
         # get rect
-        self.rect = self.image.get_rect(center=(self.screen.get_size()[0]/2, self.screen.get_size()[1]/2))
+        self.rect = self.image.get_rect(center=(self.screen.get_size()[0]/2, self.screen.get_size()[1]-100))
         
     def draw(self):
         # draw Car 
@@ -56,10 +59,15 @@ class Player(Car):
         self.speed = 5
     # move right player
     def right(self):
-        self.rect.move_ip(self.speed, 0)
+        if(self.rect.x+self.size[0] < self.screen.get_size()[0]):
+            self.rect.move_ip(self.speed, 0)
     # move right player
     def left(self):
-        self.rect.move_ip(-self.speed, 0)
+        if(self.rect.x > 0):
+            self.rect.move_ip(-self.speed, 0)
+
+# change direction to open file 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 player = Player(screen,  "car.png")
 enemy = Enemy(screen, "enemy.png")
@@ -73,11 +81,6 @@ all_sprites.add(player)
 all_sprites.add(enemy)
 
 coin = 0
-
-def addCoin():
-    global coin
-    coin += 1
-
 
 while running:
     # draw background
