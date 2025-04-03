@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 from button import Button
+import math
 
 pg.init()
 
@@ -37,6 +38,10 @@ class Game:
             Button(150, 15, 20, 20, "", self.yellow, self.set_yellow, self.screen),
             Button(180, 15, 50, 20, "rect", self.black, self.changeBrushRect, self.screen),
             Button(240, 15, 50, 20, "circle", self.black, self.changeBrushCircle, self.screen),
+            Button(300, 15, 50, 20, "triangle", self.black, self.changeBrushTriangle, self.screen),
+            Button(360, 15, 80, 20, "rightTriangle", self.black, self.changeBrushRightTriangle, self.screen),
+            Button(450, 15, 60, 20, "rhombus", self.black, self.changeBrushRhombus, self.screen),
+            Button(450, 15, 60, 20, "square", self.black, self.changeBrushSquare, self.screen),
             Button(550, 15, 20, 20, "", self.white, self.set_white, self.screen) #eraser
         ]
         
@@ -59,6 +64,14 @@ class Game:
         self.brush = "rect"
     def changeBrushCircle(self):
         self.brush = "circle"
+    def changeBrushTriangle(self):
+        self.brush = "triangle"
+    def changeBrushRightTriangle(self):
+        self.brush = "rightTriangle"
+    def changeBrushRhombus(self):
+        self.brush = "rhombus"
+    def changeBrushSquare(self):
+        self.brush = "square"
 
     # change scale of brush
     def increaseBrushScale(self):
@@ -85,9 +98,26 @@ class Game:
     # draw rect or circle when user click on the board
     def draw(self, mouse_x, mouse_y):
         if self.brush == "rect":
-            pg.draw.rect(self.screen, self.currentColor, (mouse_x, mouse_y, self.brushScale, self.brushScale))   
-        else: 
+            pg.draw.rect(self.screen, self.currentColor, (mouse_x-self.brushScale/2, mouse_y-self.brushScale, self.brushScale, self.brushScale*2))   
+        if self.brush == "square":
+            pg.draw.rect(self.screen, self.currentColor, (mouse_x-self.brushScale/2, mouse_y-self.brushScale/2, self.brushScale, self.brushScale))   
+        elif self.brush == "circle": 
             pg.draw.circle(self.screen, self.currentColor, (mouse_x, mouse_y), self.brushScale)   
+        elif self.brush == "triangle":
+            pg.draw.polygon(self.screen, self.currentColor, ((mouse_x+self.brushScale*math.cos(math.pi/2), mouse_y-self.brushScale*math.sin(math.pi/2)),
+                                                             (mouse_x+self.brushScale*math.cos(math.pi*7/6), mouse_y-self.brushScale*math.sin(math.pi*7/6)),
+                                                             (mouse_x+self.brushScale*math.cos(math.pi*11/6), mouse_y-self.brushScale*math.sin(math.pi*11/6))))   
+        elif self.brush == "rightTriangle":
+            pg.draw.polygon(self.screen, self.currentColor, ((mouse_x+self.brushScale*math.cos(math.pi/2), mouse_y-self.brushScale*math.sin(math.pi/2)*2),
+                                                             (mouse_x+self.brushScale*math.cos(math.pi/2), mouse_y-self.brushScale*math.sin(math.pi*0)),
+                                                             (mouse_x+self.brushScale*math.cos(math.pi*0), mouse_y-self.brushScale*math.sin(math.pi*0))))   
+        elif self.brush == "rhombus":
+            pg.draw.polygon(self.screen, self.currentColor, ((mouse_x, mouse_y-self.brushScale),
+                                                             (mouse_x+self.brushScale/2, mouse_y),
+                                                             (mouse_x, mouse_y+self.brushScale),
+                                                             (mouse_x-self.brushScale/2, mouse_y)))   
+
+
 
 running = True
 game = Game(screen)
