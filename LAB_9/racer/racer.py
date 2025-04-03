@@ -17,7 +17,7 @@ FPS = 60
 clock = pg.time.Clock()
 pg.mixer.init()
 pg.mixer.music.load('background.wav')
-pg.mixer.music.play()
+pg.mixer.music.play(loops=-1)
 
 # add font
 font = pg.font.SysFont("Verdana", 60)
@@ -47,6 +47,7 @@ all_sprites.add(enemy)
 all_sprites.add(coin)
 
 points = 0
+speed__point = 0
 
 while running:
 
@@ -76,10 +77,15 @@ while running:
         enemy.spawn()
     if(coin.get__top() > screen.get_size()[1]):
         coin.spawn()
+
+    if speed__point >= 5:
+        speed__point = 0
+        enemy.increaseSpeed()
             
     # if coin touch with player then game over
     if pg.sprite.spritecollideany(player, coins):
-        points += 1
+        points += coin.get__weight()
+        speed__point += coin.get__weight()
         coin.spawn()
 
     # if enemy touch with player then game over

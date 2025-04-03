@@ -1,5 +1,4 @@
 import pygame as pg
-from car import Car
 import random
 
 class Coin(pg.sprite.Sprite):
@@ -10,6 +9,7 @@ class Coin(pg.sprite.Sprite):
         self.speed = 5
         self.pos = (0, 0)
         self.size = (20, 20)
+        self.weight = 1
         # load image
         self.image = pg.image.load("coin.png")
         self.image = pg.transform.scale(self.image, self.size)
@@ -22,10 +22,14 @@ class Coin(pg.sprite.Sprite):
     def spawn(self):
         self.rect.bottom = 0
         self.rect.center = (random.randint(50,350), 0) 
+        self.weight = random.randint(1,5) 
 
     def draw(self):
-        # draw Car 
+        # draw 
         self.screen.blit(self.image, self.rect)
 
     def get__top(self):
         return self.rect.top
+    
+    def get__weight(self):
+        return self.weight

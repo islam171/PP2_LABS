@@ -16,6 +16,10 @@ class Enemy(Car):
     def get__top(self):
         return self.rect.top
     
+    # increase speed of enemy
+    def increaseSpeed(self):
+        self.speed += 1 
+    
     def spawn(self):
         # just change place of object
         self.rect.bottom = 0
