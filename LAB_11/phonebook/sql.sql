@@ -1,35 +1,35 @@
 -- FIRST TASK
 -- get phone by name
 create or replace function getNumberByName(pattern TEXT)
-returns table(firstname varchar(255), lastname varchar(255), phone varchar(11))
+returns table(n_firstname varchar(255), n_lastname varchar(255), n_phone varchar(11))
 language plpgsql
 as $$
 begin
     return QUERY
-    select n.firstname, n.lastname, n.phone from numbers n
-    where n.firstname like pattern || '%';
+    select firstname, lastname, phone from numbers
+    where firstname like pattern || '%';
 end;
 $$;
 -- get phone by numbers of phone 
 create or replace function getNumberByPhone(pattern TEXT)
-returns table(firstname varchar(255), lastname varchar(255), phone varchar(11))
+returns table(n_firstname varchar(255), n_lastname varchar(255), n_phone varchar(11))
 language plpgsql
 as $$
 begin
     return query
-    select n.firstname, n.lastname, n.phone from numbers n
-    where n.phone like pattern || '%';
+    select firstname, lastname, phone from numbers
+    where phone like pattern || '%';
 end;
 $$;
 -- get phone by lastname
 create or replace function getNumberByLastName(pattern TEXT)
-returns table(firstname varchar(255), lastname varchar(255), phone varchar(11))
+returns table(n_firstname varchar(255), n_lastname varchar(255), n_phone varchar(11))
 language plpgsql
 as $$
 begin
     return query
-    select n.firstname, n.lastname, n.phone from numbers n
-    where n.lastname like pattern || '%';
+    select firstname, lastname, phone from numbers
+    where lastname like pattern || '%';
 end;
 $$;
 
@@ -87,10 +87,10 @@ call createUsers('[
 -- FORTH TASK
 
 create or replace function pagination(lim int, offs int)
-returns table(firstname varchar(255), lastname varchar(255), phone varchar(11)) as $$
+returns table(n_firstname varchar(255), n_lastname varchar(255), phone varchar(11)) as $$
 begin
     return query
-    select n.firstname, n.lastname, n.phone from numbers n order by id limit lim offset offs;
+    select firstname, lastname, phone from numbers order by id limit lim offset offs;
 end;
 $$ language plpgsql;
 

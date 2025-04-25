@@ -96,11 +96,12 @@ def show__table():
         command = input("back - l, next - r, to leave like that - s: ")
         if(command == 'r'):
             offset += step
-        elif(command == 'l' and offset >= 1):
-            offset -= step
+        elif(command == 'l'):
+            if offset >= 1:
+                offset -= step
         elif(command == 's'):
             pass
-        elif(command == 'q'):
+        elif(command == 'q'): 
             break
         else:
             continue
@@ -108,6 +109,7 @@ def show__table():
         rows = cur.fetchall()
         if(not rows): 
             print("Phone book is empty")
+            offset-=step
         for row in rows:
             print(row)
 
